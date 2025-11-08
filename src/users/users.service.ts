@@ -43,7 +43,7 @@ export class UsersService {
 
         await this.auditLog(savedUser.user_id, 'CREATE', 'First time user created');
 
-        const walletResponse = await fetch("http://localhost:3001/api/v1/wallets", {
+        const walletResponse = await fetch("http://api:3001/api/v1/wallets", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
