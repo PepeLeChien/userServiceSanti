@@ -5,7 +5,7 @@ services:
     container_name: nest-backend
     restart: always
     ports:
-      - '3000:3000'
+      - '3005:3005'
     env_file:
       - .env
     networks:
@@ -23,7 +23,7 @@ services:
       MYSQL_ROOT_PASSWORD: ${DB_PASS}
       MYSQL_DATABASE: ${DB_NAME}
     ports:
-      - '3310:3306' # 3307 en tu PC → 3306 dentro del container
+      - '3310:3306' # 3310 en tu PC → 3306 dentro del container
     volumes:
       - mariadb_data:/var/lib/mysql
 

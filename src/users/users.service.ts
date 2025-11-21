@@ -19,17 +19,17 @@ export class UsersService {
         private auditRepository: Repository<AuditEntity>,
 
         private configService: ConfigService,
-    ){}
+    ) { }
 
-    async createUser(userDto: userDto): Promise<any>{
+    async createUser(userDto: userDto): Promise<any> {
         let newUser = new UsersEntity;
         newUser.email = userDto.email;
         newUser.phone = userDto.phone;
 
-        let savedUser =  await this.userRepository.save(newUser);
+        let savedUser = await this.userRepository.save(newUser);
 
         let newProfile = new UsersProfileEntity;
-        
+
         newProfile.dni = userDto.dni;
         newProfile.address = userDto.address ?? "Calle 12 de Prueba"
         newProfile.birthdate = userDto.birthdate ?? new Date(2000, 0, 1)
@@ -62,15 +62,15 @@ export class UsersService {
 
     getAllUsers(): Promise<UsersEntity[] | null> {
         return this.userRepository.find();
-    } 
-
-    getUser(id: number): Promise<UsersEntity | null> {
-        return this.userRepository.findOneBy({user_id: id});
     }
 
-    async updateUser(body: any, user_id: number){
+    getUser(id: number): Promise<UsersEntity | null> {
+        return this.userRepository.findOneBy({ user_id: id });
+    }
 
-        const user = await this.userRepository.findOneBy({user_id});
+    async updateUser(body: any, user_id: number) {
+
+        const user = await this.userRepository.findOneBy({ user_id });
         if (!user) throw new NotFoundException(`User with ID ${user_id} not found`);
 
         if (body.email !== undefined) user.email = body.email;
@@ -93,10 +93,10 @@ export class UsersService {
         await this.auditLog(savedUser.user_id, 'UPDATE', 'User data updated');
     }
 
-    async obtenerNombres(dni: string): Promise<string>{
+    async obtenerNombres(dni: string): Promise<string> {
         const API_TOKEN = this.configService.get<string>('API_TOKEN');
         const API_URL = this.configService.get<string>('API_URL');
-        
+
         const response = await fetch(`${API_URL}dni?numero=${dni}`, {
             method: 'GET',
             headers: {
@@ -114,15 +114,28 @@ export class UsersService {
         return data.full_name;
     }
 
+    async getUserByDni(dni: string): Promise<UsersEntity | null> {
+        const profile = await this.profileRepository.findOne({
+            where: { dni },
+            relations: ['user'],
+        });
+
+        if (!profile) {
+            return null;
+        }
+
+        return profile.user;
+    }
+
     // validarDni(dni: string){
 
     // }
 
     getUserByPhone(phone: string): Promise<UsersEntity | null> {
-        return this.userRepository.findOneBy({phone});
+        return this.userRepository.findOneBy({ phone });
     }
 
-    async auditLog(id: number, action: string, details: string){
+    async auditLog(id: number, action: string, details: string) {
         const audit = new AuditEntity;
         audit.user_id = id;
         audit.action = action;
@@ -131,11 +144,11 @@ export class UsersService {
         await this.auditRepository.save(audit);
     }
 
-    getProfile(user_id: number): Promise<UsersProfileEntity | null>{
+    getProfile(user_id: number): Promise<UsersProfileEntity | null> {
         return this.profileRepository.findOne({
-        where: { user: { user_id } },
-        relations: ['user'],
-    });
+            where: { user: { user_id } },
+            relations: ['user'],
+        });
     }
 
 }
