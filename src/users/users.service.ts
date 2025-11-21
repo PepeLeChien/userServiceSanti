@@ -21,7 +21,7 @@ export class UsersService {
         private configService: ConfigService,
     ) { }
 
-    async createUser(userDto: userDto): Promise<any> {
+    async createUser(userDto: userDto, token: string): Promise<any> {
         let newUser = new UsersEntity;
         newUser.email = userDto.email;
         newUser.phone = userDto.phone;
@@ -46,7 +46,8 @@ export class UsersService {
         const walletResponse = await fetch("http://api:3001/api/v1/wallets", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                 "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
                 userId: savedUser.user_id.toString()
