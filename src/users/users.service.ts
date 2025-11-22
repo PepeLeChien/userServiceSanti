@@ -25,6 +25,7 @@ export class UsersService {
         let newUser = new UsersEntity;
         newUser.email = userDto.email;
         newUser.phone = userDto.phone;
+        newUser.created_at = new Date;
         const API_WALLET = this.configService.get<string>('API_WALLET');
 
         let savedUser = await this.userRepository.save(newUser);
