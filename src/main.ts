@@ -17,7 +17,7 @@ async function bootstrap() {
   // Habilitamos CORS por si acaso el Frontend lo necesita luego
   app.enableCors(); 
 
-  await app.listen(process.env.PORT ?? 3000);
+  await app.listen(process.env.PORT ?? 3005);
   console.log(`Microservicio corriendo en el puerto: ${process.env.PORT ?? 3000}`);
 }
 bootstrap();
