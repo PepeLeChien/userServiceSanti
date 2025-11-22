@@ -25,6 +25,7 @@ export class UsersService {
         let newUser = new UsersEntity;
         newUser.email = userDto.email;
         newUser.phone = userDto.phone;
+        const API_WALLET = this.configService.get<string>('API_WALLET');
 
         let savedUser = await this.userRepository.save(newUser);
 
@@ -43,7 +44,7 @@ export class UsersService {
 
         await this.auditLog(savedUser.user_id, 'CREATE', 'First time user created');
 
-        const walletResponse = await fetch("http://api:3001/api/v1/wallets", {
+        const walletResponse = await fetch(`${API_WALLET}/api/v1/wallets`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
