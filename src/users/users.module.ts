@@ -9,17 +9,21 @@ import { AuditEntity } from './audit.entity';
 import { JwtStrategy } from './auth/jwt.strategy'; // Asegúrate de que la ruta sea correcta
 import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
+import { HeaderGuard } from './auth/header.guard';
+import { OrGuard } from './auth/or.guard';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([UsersEntity, UsersProfileEntity, AuditEntity]),
-    PassportModule.register({ defaultStrategy: 'jwt' }), // Registramos Passport
-    ConfigModule // Importante para leer envs en la estrategia
+    PassportModule.register({ defaultStrategy: 'jwt' }), 
+    ConfigModule 
   ],
   controllers: [UsersController],
   providers: [
     UsersService, 
-    JwtStrategy // <--- ¡ESTA LÍNEA ES LA QUE SOLUCIONA TU ERROR!
+    JwtStrategy,
+    HeaderGuard,
+    OrGuard 
   ]
 })
 export class UsersModule {}

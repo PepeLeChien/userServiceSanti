@@ -4,6 +4,7 @@ import { userDto } from './dto/userDto';
 import { UsersEntity } from './users.entity';
 import { UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
+import { OrGuard } from './auth/or.guard';
 
 @UseGuards(JwtAuthGuard)
 @Controller('users')
@@ -21,6 +22,7 @@ export class UsersController {
     }
 
     @Get('phone/:phone')
+    @UseGuards(OrGuard)
     getUserByPhone(@Param('phone') phone: string): Promise<UsersEntity | null>{
         return this.usersService.getUserByPhone(phone);
     }
