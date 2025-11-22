@@ -11,6 +11,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigModule } from '@nestjs/config';
 import { HeaderGuard } from './auth/header.guard';
 import { OrGuard } from './auth/or.guard';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -23,7 +24,8 @@ import { OrGuard } from './auth/or.guard';
     UsersService, 
     JwtStrategy,
     HeaderGuard,
-    OrGuard 
+    OrGuard,
+    JwtAuthGuard
   ]
 })
 export class UsersModule {}
