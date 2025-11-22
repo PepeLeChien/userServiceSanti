@@ -45,6 +45,8 @@ export class UsersService {
 
         await this.auditLog(savedUser.user_id, 'CREATE', 'First time user created');
 
+        console.log("Punto 1");
+
         const walletResponse = await fetch(`${API_WALLET}/api/v1/wallets`, {
             method: "POST",
             headers: {
@@ -56,10 +58,16 @@ export class UsersService {
             })
         });
 
+        console.log("Peticion Realizada");
+        console.log(walletResponse);
+        console.log(await walletResponse.json());
+
         if (!walletResponse.ok) {
             console.error("Error al crear wallet:", await walletResponse.text());
             throw new Error("No se pudo crear la wallet del usuario");
         }
+
+        console.log("Respues realizada");
 
     }
 
@@ -143,6 +151,7 @@ export class UsersService {
         audit.user_id = id;
         audit.action = action;
         audit.details = details;
+        audit.executed_at = new Date;
 
         await this.auditRepository.save(audit);
     }
