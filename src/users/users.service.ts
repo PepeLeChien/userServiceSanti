@@ -1,12 +1,12 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UsersEntity } from './users.entity';
-import { Repository } from 'typeorm';
+
 import { userDto } from './dto/userDto';
 import { UsersProfileEntity } from './usersProfile.entity';
 import { ConfigService } from '@nestjs/config';
 import { AuditEntity } from './audit.entity';
-
+import { Repository, In } from 'typeorm';
 @Injectable()
 export class UsersService {
 
@@ -166,5 +166,24 @@ export class UsersService {
         relations: ['user'], 
     });
 }
+
+async findManyByIds(userIds: number[]) {
+    if (!userIds.length) return [];
+    
+    // Usamos In() de TypeORM para buscar varios a la vez
+    return this.profileRepository.find({
+        where: { user: { user_id: In(userIds) } }, // Asegúrate de importar 'In' de typeorm
+        relations: ['user'],
+        select: {
+            fullname: true,
+            user: {
+                user_id: true,
+                phone: true,
+                email: true
+            }
+        }
+    });
+}
+
 
 }

@@ -74,4 +74,10 @@ async getProfileByPhone(@Param('phone') phone: string) {
     return profile;
 }
 
+@Post('batch-info')
+async getUsersBatch(@Body() body: { userIds: number[] }) {
+    // body.userIds será algo como [1, 5, 23, 10]
+    return this.usersService.findManyByIds(body.userIds);
+}
+
 }
