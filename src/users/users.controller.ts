@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Patch, Post, Req } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, Req,NotFoundException,ParseIntPipe } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { userDto } from './dto/userDto';
 import { UsersEntity } from './users.entity';
@@ -58,6 +58,20 @@ export class UsersController {
     @Patch(':user_id')
     async updateUser(@Param('user_id') user_id: number, @Body() body: any){
         await this.usersService.updateUser(body, user_id)
+    }
+
+ @UseGuards(JwtAuthGuard) // Tu guard de seguridad
+    @Get('profile/:user_id')
+    async getProfile(@Param('user_id', ParseIntPipe) id: number) {
+        
+        const profile = await this.usersService.getProfile(id);
+
+        if (!profile) {
+            // Si el usuario existe pero no ha completado su perfil
+            throw new NotFoundException(`El perfil para el usuario ${id} no existe`);
+        }
+
+        return profile;
     }
 
 }
