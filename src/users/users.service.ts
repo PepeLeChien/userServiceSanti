@@ -54,7 +54,9 @@ export class UsersService {
                  "Authorization": `Bearer ${token}`
             },
             body: JSON.stringify({
-                userId: savedUser.user_id.toString()
+                userId: savedUser.user_id.toString(),
+                phone: newUser.phone,
+                userName: newProfile.fullname,
             })
         });
 
