@@ -156,11 +156,15 @@ export class UsersService {
         await this.auditRepository.save(audit);
     }
 
-    getProfile(user_id: number): Promise<UsersProfileEntity | null> {
-        return this.profileRepository.findOne({
-            where: { user: { user_id } },
-            relations: ['user'],
-        });
-    }
+    async getProfileByPhone(phone: string): Promise<UsersProfileEntity | null> {
+    return this.profileRepository.findOne({
+        // 1. Buscamos dentro de la relación 'user' el campo 'phone'
+        where: { 
+            user: { phone: phone } 
+        },
+        // 2. Cargamos la relación para que TypeORM pueda filtrar y para devolver los datos
+        relations: ['user'], 
+    });
+}
 
 }

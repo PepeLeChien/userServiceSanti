@@ -60,18 +60,18 @@ export class UsersController {
         await this.usersService.updateUser(body, user_id)
     }
 
- @UseGuards(JwtAuthGuard) // Tu guard de seguridad
-    @Get('profile/:user_id')
-    async getProfile(@Param('user_id', ParseIntPipe) id: number) {
-        
-        const profile = await this.usersService.getProfile(id);
+ @UseGuards(JwtAuthGuard)
+@Get('profile/phone/:phone') // 💡 He cambiado la ruta para que sea clara
+async getProfileByPhone(@Param('phone') phone: string) {
+    
+    // Llamamos al nuevo método del servicio
+    const profile = await this.usersService.getProfileByPhone(phone);
 
-        if (!profile) {
-            // Si el usuario existe pero no ha completado su perfil
-            throw new NotFoundException(`El perfil para el usuario ${id} no existe`);
-        }
-
-        return profile;
+    if (!profile) {
+        throw new NotFoundException(`No se encontró un perfil asociado al teléfono ${phone}`);
     }
+
+    return profile;
+}
 
 }
