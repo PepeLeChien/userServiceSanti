@@ -140,9 +140,16 @@ export class UsersService {
         return profile.user;
     }
 
-    // validarDni(dni: string){
+    async getProfileByDni(dni: string): Promise<UsersProfileEntity | null> {
+        const profile = await this.profileRepository.findOneBy({dni});
 
-    // }
+        if (!profile) {
+            return null;
+        }
+
+        return profile;
+    }
+
 
     getUserByPhone(phone: string): Promise<UsersEntity | null> {
         return this.userRepository.findOneBy({ phone });

@@ -60,24 +60,40 @@ export class UsersController {
         await this.usersService.updateUser(body, user_id)
     }
 
- @UseGuards(JwtAuthGuard)
-@Get('profile/phone/:phone') // 💡 He cambiado la ruta para que sea clara
-async getProfileByPhone(@Param('phone') phone: string) {
-    
-    // Llamamos al nuevo método del servicio
-    const profile = await this.usersService.getProfileByPhone(phone);
+    @UseGuards(JwtAuthGuard)
+    @Get('profile/phone/:phone') // 💡 He cambiado la ruta para que sea clara
+    async getProfileByPhone(@Param('phone') phone: string) {
+        
+        // Llamamos al nuevo método del servicio
+        const profile = await this.usersService.getProfileByPhone(phone);
 
-    if (!profile) {
-        throw new NotFoundException(`No se encontró un perfil asociado al teléfono ${phone}`);
+        if (!profile) {
+            throw new NotFoundException(`No se encontró un perfil asociado al teléfono ${phone}`);
+        }
+
+        return profile;
     }
 
-    return profile;
-}
+    @UseGuards(JwtAuthGuard)
+    @Get('profile/dni/:dni') // 
+    async getProfileByDni(@Param('dni') dni: string) {
+        
+        // Llamamos al nuevo método del servicio
+        const profile = await this.usersService.getProfileByDni(dni);
 
-@Post('batch-info')
-async getUsersBatch(@Body() body: { userIds: number[] }) {
-    // body.userIds será algo como [1, 5, 23, 10]
-    return this.usersService.findManyByIds(body.userIds);
-}
+        if (!profile) {
+            throw new NotFoundException(`No se encontró un perfil asociado al DNI: ${dni}`);
+        }
+
+        return profile;
+    }
+
+
+
+    @Post('batch-info')
+    async getUsersBatch(@Body() body: { userIds: number[] }) {
+        // body.userIds será algo como [1, 5, 23, 10]
+        return this.usersService.findManyByIds(body.userIds);
+    }
 
 }
